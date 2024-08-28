@@ -1,0 +1,10 @@
+form {
+  margin-left: 35%;
+  margin-top: 20%;
+  padding: 20px;
+  width: 30%;
+  background-color: lightblue;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
