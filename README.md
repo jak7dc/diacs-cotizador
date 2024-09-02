@@ -7,6 +7,7 @@ RAMA PRINCIPAL MAIN
 
 RAMA DE TRABAJO STAGING
 
+<!-- rama j -->
 
 REGLAS :
 
@@ -15,3 +16,4 @@ REGLAS :
 
 -------------------------------------- STAGING---------------------------------------------
     RAMA YEVGENY ----------------------------------------------------RAMA JAIDER
+      start 01                                                         start 01   
