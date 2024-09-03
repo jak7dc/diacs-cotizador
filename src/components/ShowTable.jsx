@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useUserContext } from "../providers/UserContext";
 import { useFormTContext } from "../providers/FormTContext";
+import { deleteTable, getTable } from "../api/inventario";
 
 export const ShowTable = (props) => {
   const { HEADERS, URL_CRUD } = props
@@ -11,37 +12,27 @@ export const ShowTable = (props) => {
   const [formActions] = useFormTContext()
 
   useEffect(() => {
-    getRows()
+    showRows()
   }, [formActions.form]);
 
-  const getRows = async () => {
-    const response = await fetch(URL_CRUD, {
-      method: 'GET',
-      headers: {
-        'Content-type': 'application/json',
-        'Authorization': `Bearer ${userAcctions.user.token}`
-      }
-    })
-    const data = await response.json()
-    setRows(...[data])
+
+  // RENDERIZA LAS FILAS EN LA TABLA
+
+  const showRows = async () => {
+    const request = await getTable(URL_CRUD, userAcctions.user.token)
+    setRows(...[request.data])
   }
 
+  // ELIMINA LAS TABLAS DE LA LISTA Y LLAMA AL METODO SHOWROWS
   const deleteRows = async (row) => {
-    const response = await fetch(URL_CRUD, {
-      method: 'DELETE',
-      headers: {
-        'Content-type': 'application/json',
-        'Authorization': `Bearer ${userAcctions.user.token}`
-      },
-      body: JSON.stringify({ id: row })
-    })
-
-    if (response.status < 299) {
-      getRows()
+    const request = await deleteTable(URL_CRUD, row, userAcctions.user.token)
+    if (request.response.status < 299) {
+      showRows()
     }
   }
 
-  const editRows = (row) => {
+  // SELECIONA VALORES DE UNA FILA Y LOS ENVIA AL FORMULARIO POR MEDIO DEL CONTEXTO FORMACTIONS
+  const selectRows = (row) => {
     formActions.setForm({
       values: row,
       headers: {}
@@ -68,7 +59,7 @@ export const ShowTable = (props) => {
                   <td key={x}>{index}</td>
                 )
               })}
-              <td><button onClick={() => { editRows(Object.values(row)) }}>Edit</button></td>
+              <td><button onClick={() => { selectRows(Object.values(row)) }}>Edit</button></td>
               <td><button onClick={() => { deleteRows(Object.values(row)[0]) }}>Delete</button></td>
             </tr>
           )

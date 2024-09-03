@@ -5,11 +5,11 @@ import { Register } from "./pages/inicio/Register";
 import { Home } from "./pages/Home";
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Category } from './pages/inventary/Category.jsx'
+import { Products } from './pages/inventary/Products.jsx';
 
 export const App = () => {
   return (
     <>
-
       <BrowserRouter>
         <Routes>
           <Route index element={<Login />} />
@@ -18,6 +18,7 @@ export const App = () => {
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Home />} />
             <Route path='/category' element={<Category />} />
+            <Route path='/products' element={<Products />} />
           </Route>
 
         </Routes>

@@ -3,6 +3,9 @@
 import { useFormTContext } from '../providers/FormTContext';
 import { useUserContext } from '../providers/UserContext';
 import { useState, useEffect } from 'react'
+import { ModalForm } from './ModalForm';
+import { insertTable, editeTable } from '../api/inventario';
+
 
 export const FormTable = (props) => {
   const [userAcctions] = useUserContext()
@@ -10,12 +13,15 @@ export const FormTable = (props) => {
   const [query, setQuery] = useState("");
   const [formActions] = useFormTContext()
   const [state, setState] = useState('Nuevo');
+  const [modalStatus, setModalStatus] = useState({ estado: 'oculto', item: {} });
 
   useEffect(() => {
-    editTable()
+    editeForm()
   }, [formActions.form]);
 
-  const editTable = () => {
+  // RELLENA LOS DATOS DEL FORMULARIO SEGUN SEAN SELECCIONADO SEN EL COMPONENTE SHOWTABLE
+
+  const editeForm = () => {
     if (formActions.form.values) {
       formActions.form.values.forEach((element, index) => {
         let input = document.getElementById(DATA_FORM.campos[index].nameQuery)
@@ -31,59 +37,39 @@ export const FormTable = (props) => {
     }
   }
 
+  // EXTRAE LOS CAMPOS DEL FORMULARIO
+
   const actionForm = (e) => {
     e.preventDefault()
     const formData = new FormData(document.getElementById('form-data'))
     const dataForm = Object.fromEntries(formData.entries())
-    insertTable(dataForm)
+    actionTable(dataForm)
   }
 
-  const insertTable = async (dataForm) => {
-    if (state === 'Nuevo') {
-      const response = await fetch(URL_CRUD, {
-        method: 'POST',
-        body: JSON.stringify(dataForm),
-        headers: {
-          'Content-type': 'Application/json',
-          'Authorization': `Bearer ${userAcctions.user.token}`
-        }
+  // INSERTA O EDITA LOS ITEMS DE LA TABLA DESDE EL RCHIVO INVENTARIO CARPETA API 
+  const actionTable = async (dataForm) => {
+    const request = state === 'Nuevo' ?
+      (await insertTable(URL_CRUD, dataForm, userAcctions.user.token)) :
+      (await editeTable(URL_CRUD, dataForm, userAcctions.user.token))
+
+    setQuery(request.data.message)
+    if (request.response.status < 299) {
+      formActions.setForm({
+        values: '',
+        rows: formActions.form.rows
       })
-
-      const data = await response.json()
-
-      setQuery(data.message)
-
-      if (response.status < 299) {
-        formActions.setForm({
-          values: '',
-          rows: formActions.form.rows
-        })
-      }
-    } else {
-      const response = await fetch(URL_CRUD, {
-        method: 'PUT',
-        body: JSON.stringify(dataForm),
-        headers: {
-          'Content-type': 'Application/json',
-          'Authorization': `Bearer ${userAcctions.user.token}`
-        }
-      })
-
-      const data = await response.json()
-
-      setQuery(data.message)
-      if (response.status < 299) {
-        formActions.setForm({
-          values: '',
-          rows: formActions.form.rows
-        })
-      }
     }
   }
 
+  // LIMPIA EL FORMULARIO
   const cerrar = (e) => {
     e.preventDefault()
     formActions.clearForm()
+  }
+
+  // ENCARGADO DEL RENDER DE LA VENTANA MODAL
+  const modal = (item) => {
+    setModalStatus({ estado: 'visible', item })
   }
 
   return (
@@ -94,7 +80,7 @@ export const FormTable = (props) => {
           {DATA_FORM.campos.map((items, x) => {
             return (
               <div key={x}>
-                <Campos items={items} index={x} />
+                <Campos items={items} index={x} modal={modal} />
               </div>
             )
           })}
@@ -106,30 +92,45 @@ export const FormTable = (props) => {
         }
       </form>
       <label>{query}</label>
-      {/* <label>{JSON.stringify(formActions.form)}</label> */}
+      {
+        modalStatus.estado != 'oculto' ?
+          (<ModalForm setModalStatus={setModalStatus} modalStatus={modalStatus} />) : (<></>)
+      }
     </div>
   )
 }
 
+
+// ESTILISA Y DISCRIMINA LOS CAMPOS SEGUN EL DEBER DE SU ESTADO 
+
 export const Campos = (props) => {
-  const { items } = props
-  const { name, type, subItem, nameQuery } = items
-  if (subItem == true) {
-    return (
-      <div className='item-compuesto'>
-        <input id={nameQuery} className='item-compuesto-id' name={nameQuery} type='number' placeholder='0' />
-        <input id={`${nameQuery}_aux`} className='item-compuesto-txt' name={`${nameQuery}_aux`} placeholder={name} type={type} />
-      </div>
-    )
-  }
-  if (subItem != true) {
+  const { items, modal } = props
+  const { name, type, subItem, nameQuery, noEnable } = items
+  if (noEnable != true) {
 
-    if (type != 'textarea') return (
-      <input id={nameQuery} type={type} name={nameQuery} placeholder={name} />
-    )
+    if (subItem == true) {
+      return (
+        <div className='item-compuesto'>
+          <input id={nameQuery} className='item-compuesto-id' name={nameQuery} type='number' placeholder='0' />
+          <input id={`${nameQuery}_aux`} className='item-compuesto-txt' name={`${nameQuery}_aux`} placeholder={name} type={type} />
+          <button onClick={(e) => {
+            e.preventDefault()
+            modal(items)
+          }}>.:.</button>
+        </div>
+      )
+    }
+    if (subItem != true) {
 
-    return (
-      <textarea id={nameQuery} name={nameQuery} placeholder={name} />
-    )
+      if (type != 'textarea') return (
+        <input id={nameQuery} type={type} name={nameQuery} placeholder={name} />
+      )
+
+      return (
+        <textarea id={nameQuery} name={nameQuery} placeholder={name} />
+      )
+    }
+  } else {
+    return <></>
   }
 }
