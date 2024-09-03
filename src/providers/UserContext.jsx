@@ -7,8 +7,8 @@ export const userContext = createContext()
 export const useUserContext = () => useContext(userContext)
 
 const initialState = {
-  userName: '',
-  token: ''
+  userName: 'yevgeny',
+  token: 'eyJhbGciOiJIUzI1NiJ9.MQ.TuMyTBIOsRje6VeoC-P_uOTmubsXeRavG8eOuEBmAUw'
 }
 
 export const UserContext = ({ children }) => {

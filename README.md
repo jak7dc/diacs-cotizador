@@ -1,8 +1,18 @@
-# React + Vite
+INICIO DE PROGRAMA
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+DIVICION DE RAMAS
 
-Currently, two official plugins are available:
+RAMA PRINCIPAL MAIN
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+RAMA DE TRABAJO STAGING
+
+
+REGLAS :
+
+- PROHIBIDO HACER MERGE DE CUALQUIER RAMA
+- NOTIFICAR ANTES DE INSERTAR UNA CARPETA
+
+-------------------------------------- STAGING---------------------------------------------
+    RAMA YEVGENY ----------------------------------------------------RAMA JAIDER
+
+<!-- hola -->
