@@ -9,3 +9,6 @@ export const ProtectedRoute = ({ children, redirectTo = '/' }) => {
 
   return children ? children : <Outlet />
 }
+
+
+// RUTAS PROTEGIDAS 
