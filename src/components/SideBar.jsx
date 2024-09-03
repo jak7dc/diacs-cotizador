@@ -9,7 +9,7 @@ export const SideBar = () => {
           <p>lista de items de inventario</p>
           <ul>
             <li><Link>items de cobro</Link></li>
-            <li><Link to='/categories'>Categorias</Link></li>
+            <li><Link to='/category'>Categorias</Link></li>
           </ul>
         </li>
         <li>diacs</li>
