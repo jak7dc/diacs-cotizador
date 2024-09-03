@@ -10,7 +10,6 @@ export const ModalForm = (props) => {
   const [userAcctions] = useUserContext()
 
   useEffect(() => {
-    console.log(modalStatus)
     showRows()
   }, []);
 
