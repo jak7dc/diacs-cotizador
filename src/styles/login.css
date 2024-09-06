@@ -1,4 +1,4 @@
-.login-form {
+/* .login-form {
   margin-left: 35%;
   margin-top: 20%;
   padding: 20px;
@@ -8,38 +8,35 @@
   flex-direction: column;
   gap: 20px;
 }
+ */
 
-
-form .content-form {
+/* form .content-form {
   margin: 10px;
   width: 80%;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
-}
+} */
 
-form {
+/* form {
   margin: 10px;
-}
+} */
 
-input {
+/* input {
   width: 90%;
-}
+} */
 
-textarea {
-  /* width: ; */
-}
 
-.item-compuesto {
+/* .item-compuesto {
   display: flex;
   margin-right: 10px;
   gap: 2px;
-}
+} */
 
-.item-compuesto-id {
+/* .item-compuesto-id {
   width: 10%;
-}
+} */
 
-.item-compuesto-txt {
+/* .item-compuesto-txt {
   width: 80%;
-}
+} */
