@@ -12,7 +12,13 @@ export const SideBar = () => {
             <li><Link to='/category'>Categorias</Link></li>
           </ul>
         </li>
-        <li>diacs</li>
+        <li>
+          <p>Cotizar</p>
+          <ul>
+            <li><Link to={'/cotizador'}>Cotizar</Link></li>
+            <li><Link to={'/cotizadorListaPrecios'}>lista de precios</Link></li>
+          </ul>
+        </li>
         <li>logout</li>
       </ul>
     </nav>

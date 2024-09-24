@@ -6,6 +6,8 @@ import { Home } from "./pages/Home";
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Category } from './pages/inventary/Category.jsx'
 import { Products } from './pages/inventary/Products.jsx';
+import { CotHome } from './pages/cotizador/CotHome.jsx';
+import { CotPriceList } from './pages/cotizador/CotPriceList.jsx';
 
 export const App = () => {
   return (
@@ -19,6 +21,8 @@ export const App = () => {
             <Route path="/dashboard" element={<Home />} />
             <Route path='/category' element={<Category />} />
             <Route path='/products' element={<Products />} />
+            <Route path='/cotizador' element={<CotHome />} />
+            <Route path='/cotizadorListaPrecios' element={<CotPriceList />} />
           </Route>
 
         </Routes>

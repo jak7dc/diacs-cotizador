@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import React from "react"
 import { useEffect, useState } from "react"
 import { useUserContext } from "../providers/UserContext"
 import { getTable } from "../api/inventario"
@@ -10,7 +11,7 @@ export const ModalForm = (props) => {
   const [userAcctions] = useUserContext()
 
   useEffect(() => {
-    console.log(modalStatus)
+    // console.log(modalStatus)
     showRows()
   }, []);
 

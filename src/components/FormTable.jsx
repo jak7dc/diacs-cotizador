@@ -1,11 +1,11 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
+import React from 'react';
 import { useFormTContext } from '../providers/FormTContext';
 import { useUserContext } from '../providers/UserContext';
 import { useState, useEffect } from 'react'
 import { ModalForm } from './ModalForm';
 import { insertTable, editeTable } from '../api/inventario';
-
+import { SubFormTable } from './SubFormTable';
 
 export const FormTable = (props) => {
   const [userAcctions] = useUserContext()
@@ -14,6 +14,7 @@ export const FormTable = (props) => {
   const [formActions] = useFormTContext()
   const [state, setState] = useState('Nuevo');
   const [modalStatus, setModalStatus] = useState({ estado: 'oculto', item: {} });
+  const [subForm, setSubForm] = useState({estado: 'oculto',item : {}});
 
   useEffect(() => {
     editeForm()
@@ -72,6 +73,11 @@ export const FormTable = (props) => {
     setModalStatus({ estado: 'visible', item })
   }
 
+  // ENCARGADO DEL RENDER DE LAS SUBTABLAS
+  const subFormAcction = () =>{
+    setSubForm({estado : 'visible'})
+  }
+
   return (
     <div>
       <h2>{DATA_FORM.nombre}</h2>
@@ -80,7 +86,7 @@ export const FormTable = (props) => {
           {DATA_FORM.campos.map((items, x) => {
             return (
               <div key={x}>
-                <Campos items={items} index={x} modal={modal} />
+                <Campos items={items} index={x} modal={modal} subFormAcction ={subFormAcction} />
               </div>
             )
           })}
@@ -96,6 +102,10 @@ export const FormTable = (props) => {
         modalStatus.estado != 'oculto' ?
           (<ModalForm setModalStatus={setModalStatus} modalStatus={modalStatus} />) : (<></>)
       }
+      {
+        subForm.estado != 'oculto' ?
+        (<SubFormTable/>) : (<></>)
+      }
     </div>
   )
 }
@@ -104,33 +114,52 @@ export const FormTable = (props) => {
 // ESTILISA Y DISCRIMINA LOS CAMPOS SEGUN EL DEBER DE SU ESTADO 
 
 export const Campos = (props) => {
-  const { items, modal } = props
-  const { name, type, subItem, nameQuery, noEnable } = items
-  if (noEnable != true) {
+  const { items, modal,subFormAcction } = props
+  const { name, type, subItem, nameQuery, noEnable , subForm} = items
+  
+  // DETERMINA SI EL VALOR CONTIENE UN SUB FORMULARIO
+  if(subForm != true){
 
-    if (subItem == true) {
-      return (
-        <div className='item-compuesto'>
-          <input id={nameQuery} className='item-compuesto-id' name={nameQuery} type='number' placeholder='0' />
-          <input id={`${nameQuery}_aux`} className='item-compuesto-txt' name={`${nameQuery}_aux`} placeholder={name} type={type} />
-          <button onClick={(e) => {
-            e.preventDefault()
-            modal(items)
-          }}>.:.</button>
-        </div>
-      )
-    }
-    if (subItem != true) {
-
-      if (type != 'textarea') return (
-        <input id={nameQuery} type={type} name={nameQuery} placeholder={name} />
-      )
-
-      return (
-        <textarea id={nameQuery} name={nameQuery} placeholder={name} />
-      )
+    // DETERMINA SI EL ITEM A RENDERIZAR ES O NO VISIBLE
+    if (noEnable != true) {
+      // DETERMINA SI EL ITEM A RENDERIZAR TIENE PROVIENE DE OTRA TABLA 
+      if (subItem == true) {
+        return (
+          <div className='item-compuesto'>
+            <input id={nameQuery} className='item-compuesto-id' name={nameQuery} type='number' placeholder='0' />
+            <input id={`${nameQuery}_aux`} className='item-compuesto-txt' name={`${nameQuery}_aux`} placeholder={name} type={type} />
+            <button onClick={(e) => {
+              e.preventDefault()
+              modal(items)
+            }}>.:.</button>
+          </div>
+        )
+      }
+      if (subItem != true) {
+  
+        if (type != 'textarea') return (
+          <input id={nameQuery} type={type} name={nameQuery} placeholder={name} />
+        )
+  
+        return (
+          <textarea id={nameQuery} name={nameQuery} placeholder={name} />
+        )
+      }
+    } else {
+      return <label id={nameQuery}></label>
     }
   } else {
-    return <></>
+    return (
+      <>
+        <label id={nameQuery}></label>
+        <button id='btn-verSubForm' onClick={(e)=>{
+          e.preventDefault()
+          subFormAcction()
+        }}>ver sub tabla</button>
+      </>
+    )
   }
+  
 }
+
+
