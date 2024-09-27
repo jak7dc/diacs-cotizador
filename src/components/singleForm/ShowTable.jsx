@@ -1,26 +1,36 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 import { useEffect, useState } from "react";
-import { useUserContext } from "../providers/UserContext";
-import { useFormTContext } from "../providers/FormTContext";
-import { deleteTable, getTable } from "../api/inventario";
+import { useUserContext } from "../../providers/UserContext";
+import { useFormTContext } from "../../providers/FormTContext";
+import { deleteTable, getTable,searchTable } from "../../api/general.crud";
 
 export const ShowTable = (props) => {
-  const { HEADERS, URL_CRUD } = props
+  const { HEADERS, URL_CRUD, search} = props
   const [userAcctions] = useUserContext()
   const [rows, setRows] = useState([]);
   const [formActions] = useFormTContext()
 
   useEffect(() => {
     showRows()
-  }, [formActions.form]);
+  }, [formActions.form, search]);
 
 
   // RENDERIZA LAS FILAS EN LA TABLA
 
   const showRows = async () => {
-    const request = await getTable(URL_CRUD, userAcctions.user.token)
-    setRows(...[request.data])
+    if(search == undefined)
+    {
+      const request = await getTable(URL_CRUD, userAcctions.user.token)
+      setRows(...[request.data])
+    }else{
+      if(search != 0){
+        const request = await searchTable(`${URL_CRUD}Search`, search,userAcctions.user.token)
+        setRows(...[request.data])
+      }else{
+        setRows([])
+      }
+    }
   }
 
   // ELIMINA LAS TABLAS DE LA LISTA Y LLAMA AL METODO SHOWROWS

@@ -1,4 +1,5 @@
-import '../styles/navBar.css'
+import React from 'react'
+import '../../styles/navBar.css'
 import { Link } from 'react-router-dom'
 
 export const SideBar = () => {
@@ -17,6 +18,12 @@ export const SideBar = () => {
           <ul>
             <li><Link to={'/cotizador'}>Cotizar</Link></li>
             <li><Link to={'/cotizadorListaPrecios'}>lista de precios</Link></li>
+          </ul>
+        </li>
+        <li>
+          <p>Contactos</p>
+          <ul>
+            <li><Link to={'/clients'}>Clientes</Link></li>
           </ul>
         </li>
         <li>logout</li>

@@ -1,6 +1,7 @@
+import React from 'react'
 import '../styles/index.css'
-import { NavBar } from "../components/NavBar"
-import { SideBar } from "../components/SideBar"
+import { NavBar } from "../components/general/NavBar"
+import { SideBar } from "../components/general/SideBar"
 
 export const Home = () => {
   return (

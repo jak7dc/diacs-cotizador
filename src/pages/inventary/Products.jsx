@@ -1,9 +1,9 @@
 import React from 'react'
 import '../../styles/index.css'
-import { NavBar } from "../../components/NavBar"
-import { SideBar } from "../../components/SideBar"
-import { FormTable } from '../../components/FormTable'
-import { ShowTable } from '../../components/ShowTable'
+import { NavBar } from "../../components/general/NavBar"
+import { SideBar } from "../../components/general/SideBar"
+import { FormTable } from '../../components/singleForm/FormTable'
+import { ShowTable } from '../../components/singleForm/ShowTable'
 import config from '../../config.js'
 import { FormTContext } from '../../providers/FormTContext.jsx'
 
@@ -13,6 +13,7 @@ const HEADERS_CATEGORY = ['id', 'name', 'description', 'acctions']
 
 const DATA_FORM = {
   nombre: 'Formulario Items de Cobro',
+  nombreFormulario: 'categoria',
   campos: [
     { name: 'id', type: 'number', nameQuery: 'id' },
     { name: 'name', type: 'string', nameQuery: 'name' },
@@ -26,6 +27,7 @@ const DATA_FORM = {
 const HEADERS = ['id', 'name', 'description', 'price', 'measure', 'category_id', 'category', 'acctions']
 
 export const Products = () => {
+
   return (
     <>
       <NavBar />
@@ -33,7 +35,7 @@ export const Products = () => {
       <section className='content-home'>
         <h2>Productos</h2>
         <FormTContext>
-          <FormTable DATA_FORM={DATA_FORM} URL_CRUD={URL_CRUD} />
+          <FormTable DATA_FORM={DATA_FORM} URL_CRUD={URL_CRUD} setGetId={()=>{}} />
           <ShowTable HEADERS={HEADERS} URL_CRUD={URL_CRUD} />
         </FormTContext>
       </section>

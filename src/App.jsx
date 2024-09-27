@@ -1,3 +1,4 @@
+import React from 'react';
 import './styles/index.css'
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Login } from "./pages/inicio/Login";
@@ -8,6 +9,7 @@ import { Category } from './pages/inventary/Category.jsx'
 import { Products } from './pages/inventary/Products.jsx';
 import { CotHome } from './pages/cotizador/CotHome.jsx';
 import { CotPriceList } from './pages/cotizador/CotPriceList.jsx';
+import Clients from './pages/contactos/Clients.jsx';
 
 export const App = () => {
   return (
@@ -23,6 +25,7 @@ export const App = () => {
             <Route path='/products' element={<Products />} />
             <Route path='/cotizador' element={<CotHome />} />
             <Route path='/cotizadorListaPrecios' element={<CotPriceList />} />
+            <Route path='/clients' element={<Clients/>}/>
           </Route>
 
         </Routes>

@@ -1,15 +1,15 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
-import { useFormTContext } from '../providers/FormTContext';
-import { useUserContext } from '../providers/UserContext';
+import { useFormTContext } from '../../providers/FormTContext';
+import { useUserContext } from '../../providers/UserContext';
 import { useState, useEffect } from 'react'
 import { ModalForm } from './ModalForm';
-import { insertTable, editeTable } from '../api/inventario';
-import { SubFormTable } from './SubFormTable';
+import { insertTable, editeTable } from '../../api/general.crud';
+import { SubFormTable } from '../SubFormTable';
 
 export const FormTable = (props) => {
   const [userAcctions] = useUserContext()
-  const { DATA_FORM, URL_CRUD } = props
+  const { DATA_FORM, URL_CRUD, setGetId } = props
   const [query, setQuery] = useState("");
   const [formActions] = useFormTContext()
   const [state, setState] = useState('Nuevo');
@@ -21,20 +21,21 @@ export const FormTable = (props) => {
   }, [formActions.form]);
 
   // RELLENA LOS DATOS DEL FORMULARIO SEGUN SEAN SELECCIONADO SEN EL COMPONENTE SHOWTABLE
-
   const editeForm = () => {
     if (formActions.form.values) {
       formActions.form.values.forEach((element, index) => {
-        let input = document.getElementById(DATA_FORM.campos[index].nameQuery)
+        let input = document.getElementById(`${DATA_FORM.nombreFormulario}_${DATA_FORM.campos[index].nameQuery}`)
         input.value = element
       });
       setState('Editar')
+      setGetId(document.getElementById(`${DATA_FORM.nombreFormulario}_id`).value)
     } else {
       DATA_FORM.campos.forEach((element) => {
-        let input = document.getElementById(element.nameQuery)
+        let input = document.getElementById(`${DATA_FORM.nombreFormulario}_${element.nameQuery}`)
         input.value = ''
       });
       setState('Nuevo')
+      setGetId(0)
     }
   }
 
@@ -42,7 +43,7 @@ export const FormTable = (props) => {
 
   const actionForm = (e) => {
     e.preventDefault()
-    const formData = new FormData(document.getElementById('form-data'))
+    const formData = new FormData(document.getElementById(DATA_FORM.nombreFormulario))
     const dataForm = Object.fromEntries(formData.entries())
     actionTable(dataForm)
   }
@@ -81,12 +82,12 @@ export const FormTable = (props) => {
   return (
     <div>
       <h2>{DATA_FORM.nombre}</h2>
-      <form id='form-data'>
+      <form id={DATA_FORM.nombreFormulario}>
         <div className='content-form'>
           {DATA_FORM.campos.map((items, x) => {
             return (
               <div key={x}>
-                <Campos items={items} index={x} modal={modal} subFormAcction ={subFormAcction} />
+                <Campos items={items} index={x} modal={modal} subFormAcction ={subFormAcction} nameId={DATA_FORM.nombreFormulario} />
               </div>
             )
           })}
@@ -100,7 +101,7 @@ export const FormTable = (props) => {
       <label>{query}</label>
       {
         modalStatus.estado != 'oculto' ?
-          (<ModalForm setModalStatus={setModalStatus} modalStatus={modalStatus} />) : (<></>)
+          (<ModalForm setModalStatus={setModalStatus} modalStatus={modalStatus} nameId={DATA_FORM.nombreFormulario} />) : (<></>)
       }
       {
         subForm.estado != 'oculto' ?
@@ -114,9 +115,9 @@ export const FormTable = (props) => {
 // ESTILISA Y DISCRIMINA LOS CAMPOS SEGUN EL DEBER DE SU ESTADO 
 
 export const Campos = (props) => {
-  const { items, modal,subFormAcction } = props
+  const { items ,modal ,subFormAcction ,nameId } = props
   const { name, type, subItem, nameQuery, noEnable , subForm} = items
-  
+
   // DETERMINA SI EL VALOR CONTIENE UN SUB FORMULARIO
   if(subForm != true){
 
@@ -126,8 +127,8 @@ export const Campos = (props) => {
       if (subItem == true) {
         return (
           <div className='item-compuesto'>
-            <input id={nameQuery} className='item-compuesto-id' name={nameQuery} type='number' placeholder='0' />
-            <input id={`${nameQuery}_aux`} className='item-compuesto-txt' name={`${nameQuery}_aux`} placeholder={name} type={type} />
+            <input id={`${nameId}_${nameQuery}`} className='item-compuesto-id' name={nameQuery} type='number' placeholder='0' />
+            <input id={`${nameId}_${nameQuery}_aux`} className='item-compuesto-txt' name={`${nameQuery}_aux`} placeholder={name} type={type} />
             <button onClick={(e) => {
               e.preventDefault()
               modal(items)
@@ -137,21 +138,22 @@ export const Campos = (props) => {
       }
       if (subItem != true) {
   
-        if (type != 'textarea') return (
-          <input id={nameQuery} type={type} name={nameQuery} placeholder={name} />
+        if (type != 'textarea' && type != 'label') return (
+          <input id={`${nameId}_${nameQuery}`} type={type} name={nameQuery} placeholder={name}/>
         )
-  
+        if(type == 'label') return <input name={nameQuery} id={`${nameId}_${nameQuery}`} placeholder={name} readOnly={true} />
+        
         return (
-          <textarea id={nameQuery} name={nameQuery} placeholder={name} />
+          <textarea id={`${nameId}_${nameQuery}`} name={nameQuery} placeholder={name} />
         )
       }
     } else {
-      return <label id={nameQuery}></label>
+      return <label id={`${nameId}_${nameQuery}`}></label>
     }
   } else {
     return (
       <>
-        <label id={nameQuery}></label>
+        <label id={`${nameId}_${nameQuery}`}></label>
         <button id='btn-verSubForm' onClick={(e)=>{
           e.preventDefault()
           subFormAcction()
@@ -159,7 +161,6 @@ export const Campos = (props) => {
       </>
     )
   }
-  
 }
 
 

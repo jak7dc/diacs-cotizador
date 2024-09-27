@@ -1,11 +1,11 @@
 /* eslint-disable react/prop-types */
 import React from "react"
 import { useEffect, useState } from "react"
-import { useUserContext } from "../providers/UserContext"
-import { getTable } from "../api/inventario"
+import { useUserContext } from "../../providers/UserContext"
+import { getTable } from "../../api/general.crud"
 
 export const ModalForm = (props) => {
-  const { setModalStatus, modalStatus } = props
+  const { setModalStatus, modalStatus, nameId } = props
   const { item } = modalStatus
   const [rows, setRows] = useState([]);
   const [userAcctions] = useUserContext()
@@ -25,9 +25,9 @@ export const ModalForm = (props) => {
   // SELECCIONA LA FILA Y PASA LOS DATOS AL FORMULARIO
 
   const selectRow = (row) => {
-    const inputId = document.getElementById(item.nameQuery)
+    const inputId = document.getElementById(`${nameId}_${item.nameQuery}`)
     inputId.value = row[0]
-    const inputAux = document.getElementById(`${item.nameQuery}_aux`)
+    const inputAux = document.getElementById(`${nameId}_${item.nameQuery}_aux`)
     inputAux.value = row[1]
     setModalStatus({ estado: 'oculto' })
   }
