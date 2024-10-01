@@ -1,0 +1,102 @@
+/* ESTILO DE BARRA DE BUSQUEDA */
+
+.swTable-search-bar {
+  width: 40%;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  padding: 5px;
+  /* background-color: brown; */
+}
+
+.swTable-search-bar button {
+  font-size: 0.9em;
+  background-color: #5e9acd;
+  border: none;
+  width: 150px;
+  padding: 7px 10px;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #2475bb;
+  }
+}
+
+.swTable-search-bar select {
+  font-size: 0.9em;
+  border: 1px #dcdbe4 solid;
+  border-radius: 5px;
+}
+
+.swTable-search-bar input {
+  font-size: 1em;
+  padding: 5px;
+}
+
+
+/* ESTILO DE TABLA */
+
+table.swTable-table {
+  margin: 15px;
+  padding: 15px;
+  /* width: 100%; */
+  text-align: left;
+}
+
+table.swTable-table thead {
+  color: #224869;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  justify-content: left;
+}
+
+table.swTable-table td,
+table.swTable-table th {
+  border-bottom: 1px solid #dcdbe4;
+  padding: 8px 10px;
+}
+
+table.swTable-table tbody tr {
+  padding: 10px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+table.swTable-table div {
+  display: flex;
+  flex-direction: row;
+}
+
+
+/* ESTILO DE BOTONES */
+.swTable-btn-acction {
+  font-size: 0.8em;
+  /* margin-top: 10px; */
+  background-color: #5e9acd;
+  border: none;
+  width: 150px;
+  padding: 7px 10px;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+}
+
+.swTable-btn-acction:hover {
+  background-color: #2475bb;
+}
+
+.swTable-btn-close {
+  /* margin-top: 10px; */
+  margin-left: 10px;
+  background-color: white;
+  border: solid 1px #5e9acd;
+  width: 150px;
+  padding: 7px 10px;
+  border-radius: 4px;
+  color: #5e9acd;
+  cursor: pointer;
+}
+
+.swTable-btn-close:hover {
+  background-color: #f2f1fa;
+}

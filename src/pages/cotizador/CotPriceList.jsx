@@ -1,4 +1,3 @@
-import '../../styles/cotizacion/cotizacion.css'
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { NavBar } from '../../components/general/NavBar.jsx'
@@ -19,11 +18,11 @@ const DATA_FORM = {
     { name: 'descripcion', type: 'textarea', nameQuery: 'description' },
     { name: 'unidad de medida', type: 'string', nameQuery: 'measure' },
     { name: 'costo por unidad', type: 'number', nameQuery: 'price' },
-    { name: 'utilidad', type: 'number', nameQuery: 'utilitis'},
+    { name: 'utilidad', type: 'number', nameQuery: 'utilitis' },
   ],
 }
 
-const HEADERS = ['id', 'nombre', 'descripcion', 'und medida', 'precio und', 'utilidad', 'acciones']
+const HEADERS = ['id', 'nombre', 'descripcion', 'und medida', 'precio und', 'utilidad']
 
 const URL_CRUD_SUB = `${config.url}/priceList_items`
 
@@ -39,7 +38,7 @@ const DATA_FORM_SUB = {
   ],
 }
 // limit, price, approximate, listPriceId
-const HEADERS_SUB = ['id', 'hasta','precio' ,'aproximar en', 'item de lista',]
+const HEADERS_SUB = ['id', 'hasta', 'precio', 'aproximar en', 'item de lista',]
 
 export const CotPriceList = () => {
   const [getId, setGetId] = useState(0);
@@ -47,9 +46,9 @@ export const CotPriceList = () => {
 
   useEffect(() => {
     const input = document.getElementById('formEscalaPrecios_listPriceId')
-    if(getId == 0){
+    if (getId == 0) {
       input.value = ''
-    }else{
+    } else {
       input.value = getId
     }
   }, [getId]);
@@ -61,12 +60,12 @@ export const CotPriceList = () => {
       <section className='content-home'>
         <h2>Lista de precios</h2>
         <FormTContext>
-          <FormTable DATA_FORM={DATA_FORM} URL_CRUD={URL_CRUD} setGetId= {setGetId} />
-          <ShowTable HEADERS={HEADERS} URL_CRUD={URL_CRUD} />
+          <FormTable DATA_FORM={DATA_FORM} URL_CRUD={URL_CRUD} setGetId={setGetId} />
+          <ShowTable HEADERS={HEADERS} URL_CRUD={URL_CRUD} barSearch={true} />
         </FormTContext>
         <FormTContext>
           <FormTable DATA_FORM={DATA_FORM_SUB} URL_CRUD={URL_CRUD_SUB} getId={getIdSub} setGetId={setGetIdSub} />
-          <ShowTable HEADERS={HEADERS_SUB} URL_CRUD={URL_CRUD_SUB} search={getId}/>
+          <ShowTable HEADERS={HEADERS_SUB} URL_CRUD={URL_CRUD_SUB} search={getId} />
         </FormTContext>
       </section>
     </>

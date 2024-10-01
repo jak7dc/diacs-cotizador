@@ -1,5 +1,4 @@
 import React from 'react'
-import '../../styles/index.css'
 import { NavBar } from "../../components/general/NavBar"
 import { SideBar } from "../../components/general/SideBar"
 import { FormTable } from '../../components/singleForm/FormTable'
@@ -24,7 +23,7 @@ const DATA_FORM = {
     { name: 'category_aux', type: 'string', nameQuery: 'category_aux', noEnable: true }],
 }
 
-const HEADERS = ['id', 'name', 'description', 'price', 'measure', 'category_id', 'category', 'acctions']
+const HEADERS = ['id', 'name', 'description', 'price', 'measure', 'category_id', 'category']
 
 export const Products = () => {
 
@@ -35,8 +34,8 @@ export const Products = () => {
       <section className='content-home'>
         <h2>Productos</h2>
         <FormTContext>
-          <FormTable DATA_FORM={DATA_FORM} URL_CRUD={URL_CRUD} setGetId={()=>{}} />
-          <ShowTable HEADERS={HEADERS} URL_CRUD={URL_CRUD} />
+          <FormTable DATA_FORM={DATA_FORM} URL_CRUD={URL_CRUD} setGetId={() => { }} />
+          <ShowTable HEADERS={HEADERS} URL_CRUD={URL_CRUD} barSearch={true} />
         </FormTContext>
       </section>
     </>

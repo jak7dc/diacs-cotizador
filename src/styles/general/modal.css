@@ -1,0 +1,94 @@
+.modal-h2 {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  padding-left: 15px;
+  color: #224869;
+  margin: 10px 0px;
+}
+
+/* ESTILO DE FORMULARIO */
+
+.modal-form {
+  background-color: rgba(242, 241, 250, 0.5);
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ESTILO DE CONTENEDORES */
+.modal-content {
+  background-color: #f2f1fa;
+  /* width: 70%; */
+  padding: 20px;
+  box-shadow: rgba(94, 154, 205, 0.5) 0px 1px 15px;
+  border-radius: 10px;
+}
+
+/* ESTILO DE TABLA */
+table.modal-table {
+  margin: 15px;
+  padding: 15px;
+  /* width: 100%; */
+  text-align: left;
+}
+
+table.modal-table thead {
+  color: #224869;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  justify-content: left;
+}
+
+table.modal-table td,
+table.modal-table th {
+  border-bottom: 1px solid #dcdbe4;
+  padding: 8px 10px;
+}
+
+table.modal-table tbody tr {
+  padding: 10px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+table.modal-table div {
+  display: flex;
+  flex-direction: row;
+}
+
+/* ESTILO DE BOTONES */
+
+.modal-btn-acction {
+  font-size: 0.8em;
+  /* margin-top: 10px; */
+  background-color: #5e9acd;
+  border: none;
+  width: 150px;
+  padding: 7px 10px;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+}
+
+.modal-btn-acction:hover {
+  background-color: #2475bb;
+}
+
+.modal-btn-close {
+  /* margin-top: 10px; */
+  margin-left: 10px;
+  background-color: white;
+  border: solid 1px #5e9acd;
+  width: 150px;
+  padding: 7px 10px;
+  border-radius: 4px;
+  color: #5e9acd;
+  cursor: pointer;
+}
+
+.modal-btn-close:hover {
+  background-color: #f2f1fa;
+}

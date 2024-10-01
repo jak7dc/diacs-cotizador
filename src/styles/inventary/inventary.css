@@ -1,0 +1,5 @@
+.content-home {
+  background-color: #f2f1fa;
+  display: flex;
+  flex-direction: column;
+}

@@ -15,8 +15,8 @@ input {
   height: 25px;
 }
 
-textarea{
-  height: 5.4em; 
+textarea {
+  height: 5.4em;
   width: 90%;
   resize: none;
 }
@@ -24,7 +24,9 @@ textarea{
 .item-compuesto {
   display: flex;
   margin-right: 10px;
-  gap: 2px;
+  gap: 10px;
+  align-items: center;
+
 }
 
 .item-compuesto-id {

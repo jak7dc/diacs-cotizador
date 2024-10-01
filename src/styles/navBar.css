@@ -1,5 +1,5 @@
 .navUp {
-  background-color: lightgray;
+  background-color: white;
   position: fixed;
   left: 0;
   top: 0;
@@ -24,7 +24,7 @@ li {
 }
 
 .navleft {
-  background-color: lightgray;
+  background-color: white;
   position: fixed;
   left: 0;
   top: 70px;
