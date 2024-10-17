@@ -1,6 +1,6 @@
-/* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react/prop-types */
 
+import React from "react"
 import { useState, useContext, createContext } from "react"
 
 export const userContext = createContext()

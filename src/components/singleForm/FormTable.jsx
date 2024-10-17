@@ -5,19 +5,20 @@ import { useFormTContext } from '../../providers/FormTContext';
 import { useUserContext } from '../../providers/UserContext';
 import { useState, useEffect } from 'react'
 import { ModalForm } from './ModalForm';
-import { insertTable, editeTable } from '../../api/general.crud';
-import { SubFormTable } from '../SubFormTable';
+import { insertTable, editeTable, searchTable } from '../../api/general.crud';
+import FormTableCompuesto from './FormTableCompuesto';
 
 export const FormTable = (props) => {
   const [userAcctions] = useUserContext()
-  const { DATA_FORM, URL_CRUD, setGetId } = props
+  const { DATA_FORM, URL_CRUD, setGetId, setEnableForm, SUB_FORM } = props
   const [query, setQuery] = useState("");
   const [formActions] = useFormTContext()
   const [state, setState] = useState('Nuevo');
   const [modalStatus, setModalStatus] = useState({ estado: 'oculto', item: {} });
-  const [subForm, setSubForm] = useState({ estado: 'oculto', item: {} });
+  // const [subForm, setSubForm] = useState({ estado: 'oculto', item: {} });
 
   useEffect(() => {
+    // console.log(SUB_FORM)
     editeForm()
   }, [formActions.form]);
 
@@ -47,20 +48,38 @@ export const FormTable = (props) => {
     const formData = new FormData(document.getElementById(DATA_FORM.nombreFormulario))
     const dataForm = Object.fromEntries(formData.entries())
     actionTable(dataForm)
+
   }
 
   // INSERTA O EDITA LOS ITEMS DE LA TABLA DESDE EL RCHIVO INVENTARIO CARPETA API 
+
+  // DISCRIMINA SI TIENE UNA SUB TABLA PARA DEMARCAR LOS ITEMS EN LOS CAMPOS Y SER EDITADOS  
+  // SUB_FORM ES EL ITEM QUE UTILIZAMOS PARA SABER SI TENEMOS O NO UN SUB FORMULARIO 
   const actionTable = async (dataForm) => {
     const request = state === 'Nuevo' ?
       (await insertTable(URL_CRUD, dataForm, userAcctions.user.token)) :
       (await editeTable(URL_CRUD, dataForm, userAcctions.user.token))
 
     setQuery(request.data.message)
-    if (request.response.status < 299) {
-      formActions.setForm({
-        values: '',
-        rows: formActions.form.rows
-      })
+    if (SUB_FORM) {
+      if (request.response.status < 299) {
+        const rowId = request.data.data.lastInsertRowid
+        const row = await searchTable(`${URL_CRUD}Search`, rowId, userAcctions.user.token)
+
+        console.log(Object.values(row.data[0]))
+        formActions.setForm({
+          values: Object.values(row.data[0]),
+          rows: formActions.form.rows
+        })
+      }
+    } else {
+      if (request.response.status < 299) {
+        formActions.setForm({
+          values: '',
+          rows: formActions.form.rows
+        })
+      }
+      setEnableForm(0)
     }
   }
 
@@ -68,6 +87,7 @@ export const FormTable = (props) => {
   const cerrar = (e) => {
     e.preventDefault()
     formActions.clearForm()
+    setEnableForm(0)
   }
 
   // ENCARGADO DEL RENDER DE LA VENTANA MODAL
@@ -76,42 +96,40 @@ export const FormTable = (props) => {
   }
 
   // ENCARGADO DEL RENDER DE LAS SUBTABLAS
-  const subFormAcction = () => {
-    setSubForm({ estado: 'visible' })
-  }
+
 
   return (
-    <div>
-      <h2 className='frTable-h2'>{DATA_FORM.nombre}</h2>
-      <form id={DATA_FORM.nombreFormulario}>
+    <div className='frTable-max'>
+      <div className='frTable-content'>
         <div className='frTable-form-max'>
-          <div className='frTable-form'>
-            {DATA_FORM.campos.map((items, x) => {
-              return (
-                <div key={x}>
-                  <Campos items={items} index={x} modal={modal} subFormAcction={subFormAcction} nameId={DATA_FORM.nombreFormulario} />
-                </div>
-              )
-            })}
-          </div>
-          <div>
-            <button className='frTable-btn-acction' onClick={actionForm}>{state}</button>
-            {
-              state == 'Editar' ?
-                (<button className='frTable-btn-close' onClick={cerrar} >Cerrar</button>) : (<></>)
-            }
-          </div>
+          <form id={DATA_FORM.nombreFormulario}>
+            <h2 className='frTable-h2'>{DATA_FORM.nombre}</h2>
+            <div className='frTable-form'>
+              {DATA_FORM.campos.map((items, x) => {
+                return (
+                  <Campos key={x} items={items} index={x} modal={modal} nameId={DATA_FORM.nombreFormulario} />
+                )
+              })}
+            </div>
+            <div>
+              <button className='frTable-btn-acction' onClick={actionForm}>{state}</button>
+              <button className='frTable-btn-close' onClick={cerrar} >Cerrar</button>
+            </div>
+          </form>
+          {SUB_FORM && state != 'Nuevo' ?
+            <FormTableCompuesto
+              SUB_FORM={SUB_FORM} /> :
+            <></>}
         </div>
-      </form>
-      <label>{query}</label>
-      {
-        modalStatus.estado != 'oculto' ?
-          (<ModalForm setModalStatus={setModalStatus} modalStatus={modalStatus} nameId={DATA_FORM.nombreFormulario} />) : (<></>)
-      }
-      {
-        subForm.estado != 'oculto' ?
-          (<SubFormTable />) : (<></>)
-      }
+        <label>{query}</label>
+        {
+          modalStatus.estado != 'oculto' ?
+            (<ModalForm
+              setModalStatus={setModalStatus}
+              modalStatus={modalStatus}
+              nameId={DATA_FORM.nombreFormulario} />) : (<></>)
+        }
+      </div>
     </div>
   )
 }
@@ -120,59 +138,62 @@ export const FormTable = (props) => {
 // ESTILISA Y DISCRIMINA LOS CAMPOS SEGUN EL DEBER DE SU ESTADO 
 
 export const Campos = (props) => {
-  const { items, modal, subFormAcction, nameId } = props
-  const { name, type, subItem, nameQuery, noEnable, subForm } = items
+  const { items, modal, nameId } = props
+  const { name, type, subItem, nameQuery, noEnable } = items
 
-  // DETERMINA SI EL VALOR CONTIENE UN SUB FORMULARIO
-  if (subForm != true) {
-
-    // DETERMINA SI EL ITEM A RENDERIZAR ES O NO VISIBLE
-    if (noEnable != true) {
-      // DETERMINA SI EL ITEM A RENDERIZAR TIENE PROVIENE DE OTRA TABLA 
-      if (subItem == true) {
-        return (
+  // DETERMINA SI EL ITEM A RENDERIZAR ES O NO VISIBLE
+  if (noEnable != true) {
+    // DETERMINA SI EL ITEM A RENDERIZAR TIENE PROVIENE DE OTRA TABLA 
+    if (subItem == true) {
+      return (
+        <div>
           <div className='frTable-item-compuesto'>
             <label>{`${name}:`}</label>
-            <input id={`${nameId}_${nameQuery}`} className='frTable-item-compuesto-id' name={nameQuery} type='number' placeholder='0' />
-            <input id={`${nameId}_${nameQuery}_aux`} className='frTable-item-compuesto-txt' name={`${nameQuery}_aux`} placeholder={name} type={type} />
-            <button className='frTable-btn-modal' onClick={(e) => {
-              e.preventDefault()
-              modal(items)
-            }}>.:.</button>
+            <div className='frTable-sub-item'>
+              <input id={`${nameId}_${nameQuery}`} className='frTable-item-compuesto-id' name={nameQuery} type='number' placeholder='0' />
+              <input id={`${nameId}_${nameQuery}_aux`} className='frTable-item-compuesto-txt' name={`${nameQuery}_aux`} placeholder={name} type={type} />
+              <button className='frTable-btn-modal' onClick={(e) => {
+                e.preventDefault()
+                modal(items)
+              }}>.:.</button>
+            </div>
           </div>
-        )
-      }
-      if (subItem != true) {
+        </div>
+      )
+    }
+    if (subItem != true) {
 
-        if (type != 'textarea' && type != 'label') return (
+      if (type != 'textarea' && type != 'label') return (
+        <div>
           <div className='frTable-item-compuesto'>
             <label>{`${name}:`}</label>
             <input id={`${nameId}_${nameQuery}`} type={type} name={nameQuery} placeholder={name} />
           </div>
-        )
-        if (type == 'label') return <input name={nameQuery} id={`${nameId}_${nameQuery}`} placeholder={name} readOnly={true} />
+        </div>
+      )
+      if (type == 'label') return (
+        <div>
+          <div className='frTable-item-compuesto'>
+            <label>{`${name}:`}</label>
+            <input name={nameQuery} id={`${nameId}_${nameQuery}`} placeholder={name} readOnly={true} />
+          </div>
+        </div>
+      )
 
-        return (
+      return (
+        <div>
           <div className='frTable-item-compuesto'>
             <label>{`${name}:`}</label>
             <textarea id={`${nameId}_${nameQuery}`} name={nameQuery} placeholder={name} />
           </div>
-        )
-      }
-    } else {
-      return <label id={`${nameId}_${nameQuery}`}></label>
+        </div>
+      )
     }
   } else {
     return (
-      <>
+      <div className='frTable-noEnable'>
         <label id={`${nameId}_${nameQuery}`}></label>
-        <button id='btn-verSubForm' onClick={(e) => {
-          e.preventDefault()
-          subFormAcction()
-        }}>ver sub tabla</button>
-      </>
+      </div>
     )
   }
 }
-
-

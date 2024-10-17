@@ -1,38 +1,213 @@
-form .content-form {
-  margin: 10px;
-  width: 80%;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
+/* ESTILO DE VENTANA DE TRABAJO */
 
-form {
-  margin: 10px;
-}
-
-input {
-  width: 90%;
-  height: 25px;
-}
-
-textarea {
-  height: 5.4em;
-  width: 90%;
-  resize: none;
-}
-
-.item-compuesto {
+.cot-content-max {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100vh;
   display: flex;
-  margin-right: 10px;
-  gap: 10px;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  background-color: rgba(242, 241, 250, 0.5);
+}
+
+.cot-content {
+  width: 90%;
+  height: 90%;
+}
+
+/* TITULOS */
+
+.cot-content-h2 {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.cot-content-h2 button {
+  height: 2.5em;
+}
+
+.cot-h2 {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  padding-left: 15px;
+  color: #224869;
+  margin: 10px 0px;
+}
+
+/* ESTILO CONTENEDORES */
+
+.cot-form-max {
+  background-color: white;
+  color: #5e9acd;
+  border-radius: 10px;
+  box-shadow: rgba(94, 154, 205, 0.5) 0px 1px 5px;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  font-size: large;
+  gap: 10px;
+  font-size: 1em;
+  /* width: 100%; */
+}
+
+
+.cot-form {
+  width: 100%;
+  margin: 0px;
+  margin-bottom: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.cot-subform-content {
+  border-top: solid #f2f1fa;
+}
+
+
+.cot-table-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  padding-right: 20px;
+}
+
+.cot-content-table {
+  border-top: solid #f2f1fa;
+  /* display: flex; */
+  /* flex-direction: row; */
+  height: 220px;
+  overflow: scroll;
+  scrollbar-color: #224869 white;
+
 
 }
 
-.item-compuesto-id {
-  width: 10%;
+/* FORMULARIO  DE COSTO Y TOTALIZADOR */
+
+.cot-totalcosto {
+  width: 100%;
+  padding: 10px;
+  border-top: solid #f2f1fa;
+  border-left: solid #f2f1fa;
 }
 
-.item-compuesto-txt {
-  width: 80%;
+.cot-totalcosto h2 {
+  color: #224869;
+  padding: 0;
+  margin: 0%;
+}
+
+.cot-totalcosto form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cot-totalcosto .cot-btn-content {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+/* ESTILO DE TABLA */
+
+table.cot-table {
+  margin: 5px;
+  padding: 5px;
+  width: 95%;
+  text-align: left;
+}
+
+table.cot-table thead {
+  color: #224869;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  justify-content: left;
+  font-size: 0.9em;
+}
+
+table.cot-table th {
+  position: sticky;
+  top: 0px;
+  background-color: white;
+}
+
+table.cot-table td,
+table.cot-table th {
+  border-bottom: 1px solid #dcdbe4;
+  padding: 4px 5px;
+}
+
+table.cot-table tbody tr {
+  padding: 5px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 0.9em;
+}
+
+table.cot-table div {
+  display: flex;
+  flex-direction: row;
+}
+
+
+/* ESTILO DE BOTONES */
+.cot-table-btn-acction {
+  font-size: 0.75em;
+  /* margin-top: 10px; */
+  background-color: #5e9acd;
+  border: none;
+  width: 100px;
+  padding: 7px 10px;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.cot-table-btn-acction:hover {
+  background-color: #2475bb;
+}
+
+.cot-table-btn-calcular {
+  font-size: 0.75em;
+  /* margin-top: 10px; */
+  background-color: #228660;
+  border: none;
+  width: 100px;
+  padding: 7px 10px;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.cot-table-btn-calcular:hover {
+  background-color: #6baf98;
+}
+
+
+.cot-table-btn-close {
+  /* margin-top: 10px; */
+  margin-left: 6px;
+  background-color: white;
+  border: solid 1px #5e9acd;
+  width: 100px;
+  padding: 7px 10px;
+  border-radius: 4px;
+  color: #5e9acd;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.cot-table-btn-close:hover {
+  background-color: #f2f1fa;
+}
+
+.cot-btn-content {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
 }

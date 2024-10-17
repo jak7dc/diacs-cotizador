@@ -1,0 +1,16 @@
+.frCompuesto-max-content {
+  border-top: solid #f2f1fa;
+}
+
+.frCompuesto-form-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.frCompuesto-sub-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}

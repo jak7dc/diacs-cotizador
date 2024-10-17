@@ -5,12 +5,12 @@ import { FormTable } from '../../components/singleForm/FormTable'
 import { ShowTable } from '../../components/singleForm/ShowTable'
 import config from '../../config.js'
 import { FormTContext } from '../../providers/FormTContext.jsx'
-
+import { useState } from 'react'
 const DATA_FORM = {
   nombre: 'Formulario de categorias',
   nombreFormulario: 'categoria',
   campos: [
-    { name: 'id', type: 'number', nameQuery: 'id' },
+    { name: 'id', type: 'label', nameQuery: 'id' },
     { name: 'nombre', type: 'string', nameQuery: 'name' },
     { name: 'descripcion', type: 'textarea', nameQuery: 'description' }],
 }
@@ -21,6 +21,7 @@ const HEADERS = ['id', 'nombre', 'descripcion']
 
 
 export const Category = () => {
+  const [enableForm, setEnableForm] = useState(false);
 
   return (
     <>
@@ -29,8 +30,11 @@ export const Category = () => {
       <section className='content-home'>
         <h2>categoria</h2>
         <FormTContext>
-          <FormTable DATA_FORM={DATA_FORM} URL_CRUD={URL_CRUD} setGetId={() => { }} />
-          <ShowTable HEADERS={HEADERS} URL_CRUD={URL_CRUD} barSearch={true} />
+          {enableForm ?
+            <FormTable DATA_FORM={DATA_FORM} URL_CRUD={URL_CRUD} setGetId={() => { }} setEnableForm={setEnableForm} /> :
+            <></>
+          }
+          <ShowTable HEADERS={HEADERS} URL_CRUD={URL_CRUD} barSearch={true} visiveForm={{ enableForm, setEnableForm }} />
         </FormTContext>
       </section>
     </>

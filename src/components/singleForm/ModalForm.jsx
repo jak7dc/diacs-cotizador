@@ -36,7 +36,7 @@ export const ModalForm = (props) => {
   return (
     <div className="modal-form">
       <div className="modal-content">
-        <h2 className="modal-h2">Seleciona item</h2>
+        <h2 className="modal-h2">{item.nameForm}</h2>
         <table className="modal-table">
           <thead>
             <tr>

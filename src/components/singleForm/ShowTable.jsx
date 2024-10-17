@@ -5,9 +5,10 @@ import { useEffect, useState } from "react";
 import { useUserContext } from "../../providers/UserContext";
 import { useFormTContext } from "../../providers/FormTContext";
 import { deleteTable, getTable, searchTable } from "../../api/general.crud";
+import { IoIosAdd } from "react-icons/io";
 
 export const ShowTable = (props) => {
-  const { HEADERS, URL_CRUD, search, barSearch } = props
+  const { HEADERS, URL_CRUD, search, barSearch, visiveForm } = props
 
   const [userAcctions] = useUserContext()
   const [rows, setRows] = useState([]);
@@ -44,6 +45,7 @@ export const ShowTable = (props) => {
 
   // SELECIONA VALORES DE UNA FILA Y LOS ENVIA AL FORMULARIO POR MEDIO DEL CONTEXTO FORMACTIONS
   const selectRows = (row) => {
+    visiveForm.setEnableForm(1)
     formActions.setForm({
       values: row,
       headers: {}
@@ -100,7 +102,7 @@ export const ShowTable = (props) => {
   }
 
   return (
-    <div>
+    <div className='swTable-max-content'>
       {/* BARRA DE BUSQUEDA */}
       {barSearch == true ?
         <form id='search-form' className="swTable-search-bar">
@@ -112,7 +114,16 @@ export const ShowTable = (props) => {
             })}
           </select>
           <input name='value' placeholder="buscar" />
-          <button onClick={searchRows}>Buscar</button>
+          <div className='swTable-content-butons'>
+            <button className='swTable-btnSearch' onClick={searchRows}>Buscar</button>
+            {!visiveForm.enableForm ?
+              <button onClick={(e) => {
+                e.preventDefault()
+                visiveForm.setEnableForm(1)
+              }} className='swTable-btnNuevo'>{<IoIosAdd size={20} />} nuevo</button> :
+              <></>
+            }
+          </div>
         </form>
         : <></>}
       <div>

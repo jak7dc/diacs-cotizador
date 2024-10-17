@@ -1,9 +1,9 @@
 import React from 'react'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { NavBar } from '../../components/general/NavBar.jsx'
 import { SideBar } from '../../components/general/SideBar.jsx'
-import { FormTable } from '../../components/singleForm/FormTable.jsx'
 import { ShowTable } from '../../components/singleForm/ShowTable.jsx'
+import { FormTable } from '../../components/singleForm/FormTable.jsx'
 import { FormTContext } from '../../providers/FormTContext.jsx'
 import config from '../../config.js'
 
@@ -24,34 +24,20 @@ const DATA_FORM = {
 
 const HEADERS = ['id', 'nombre', 'descripcion', 'und medida', 'precio und', 'utilidad']
 
-const URL_CRUD_SUB = `${config.url}/priceList_items`
-
-const DATA_FORM_SUB = {
-  nombre: 'Escala de precios',
-  nombreFormulario: 'formEscalaPrecios',
-  campos: [
+const SUB_FORM = {
+  URL_CRUD: `${config.url}/priceList_items`,
+  TITLE: 'rangos de precio',
+  HEADERS: [
     { name: 'id', type: 'label', nameQuery: 'id' },
-    { name: 'hasta', type: 'string', nameQuery: 'limit' },
+    { name: 'hasta', type: 'number', nameQuery: 'limit' },
     { name: 'precio', type: 'number', nameQuery: 'price' },
     { name: 'aproximar en', type: 'number', nameQuery: 'approximate' },
-    { name: 'item de lista', type: 'label', nameQuery: 'listPriceId' },
-  ],
+    { name: 'item lista', type: 'label', nameQuery: 'listPriceId', noEnable: true }
+  ]
 }
-// limit, price, approximate, listPriceId
-const HEADERS_SUB = ['id', 'hasta', 'precio', 'aproximar en', 'item de lista',]
 
 export const CotPriceList = () => {
-  const [getId, setGetId] = useState(0);
-  const [getIdSub, setGetIdSub] = useState(0);
-
-  useEffect(() => {
-    const input = document.getElementById('formEscalaPrecios_listPriceId')
-    if (getId == 0) {
-      input.value = ''
-    } else {
-      input.value = getId
-    }
-  }, [getId]);
+  const [enableForm, setEnableForm] = useState(false);
 
   return (
     <>
@@ -60,12 +46,16 @@ export const CotPriceList = () => {
       <section className='content-home'>
         <h2>Lista de precios</h2>
         <FormTContext>
-          <FormTable DATA_FORM={DATA_FORM} URL_CRUD={URL_CRUD} setGetId={setGetId} />
-          <ShowTable HEADERS={HEADERS} URL_CRUD={URL_CRUD} barSearch={true} />
-        </FormTContext>
-        <FormTContext>
-          <FormTable DATA_FORM={DATA_FORM_SUB} URL_CRUD={URL_CRUD_SUB} getId={getIdSub} setGetId={setGetIdSub} />
-          <ShowTable HEADERS={HEADERS_SUB} URL_CRUD={URL_CRUD_SUB} search={getId} />
+          {enableForm ?
+            <FormTable
+              SUB_FORM={SUB_FORM}
+              DATA_FORM={DATA_FORM}
+              URL_CRUD={URL_CRUD}
+              setGetId={() => { }}
+              setEnableForm={setEnableForm} /> :
+            <></>
+          }
+          <ShowTable HEADERS={HEADERS} URL_CRUD={URL_CRUD} barSearch={true} visiveForm={{ enableForm, setEnableForm }} />
         </FormTContext>
       </section>
     </>
