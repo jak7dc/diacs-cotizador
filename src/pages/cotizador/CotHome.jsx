@@ -40,12 +40,13 @@ const SUB_FORM = {
     { name: 'item', type: 'string', nameQuery: 'item' },
     { name: 'cantidad', type: 'number', nameQuery: 'quantity' },
     { name: 'costo und', type: 'number', nameQuery: 'price' },
-    { name: 'und medida', type: 'string', nameQuery: 'measure' },
+    { name: 'und medida', type: 'combox', nameQuery: 'measure', cboItems: ['unidad finalizada', 'tamaño', 'pliego', 'metro ^2'] },
     { name: 'utilidad', type: 'number', nameQuery: 'utilitis' },
-    { name: 'total', type: 'number', nameQuery: 'total' }
+    { name: 'total', type: 'number', nameQuery: 'total' },
+    { name: 'lista de precios', type: 'label', nameQuery: 'priceList' },
     // { name: 'cotizacion_id', type: 'number', nameQuery: 'cotizacionId' },
   ],
-  HEADERS: ['id', 'nombre', 'item', 'cantidad', 'costo/unid', 'und/medida', 'utilidad', 'total']
+  HEADERS: ['id', 'nombre', 'item', 'cantidad', 'costo/unid', 'und/medida', 'utilidad', 'total', 'lista/precios']
 }
 
 export const CotHome = () => {

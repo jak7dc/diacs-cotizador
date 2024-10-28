@@ -7,6 +7,7 @@ import { useFormTContext } from '../../providers/FormTContext'
 import { useState, useEffect } from 'react';
 import { ModalForm } from '../singleForm/ModalForm';
 import { insertTable, editeTable, searchTable, deleteTable } from '../../api/general.crud';
+import config from '../../config';
 
 
 const CotizacionForm = (props) => {
@@ -46,7 +47,6 @@ const CotizacionForm = (props) => {
   // DISCRIMINA SI TIENE UNA SUB TABLA PARA DEMARCAR LOS ITEMS EN LOS CAMPOS Y SER EDITADOS  
   // SUB_FORM ES EL ITEM QUE UTILIZAMOS PARA SABER SI TENEMOS O NO UN SUB FORMULARIO 
   const actionTable = async (dataForm) => {
-    console.log(dataForm)
     if (state === 'Nuevo') {
       dataForm.price = '0'
       dataForm.cost = '0'
@@ -188,7 +188,7 @@ const CotizacionForm = (props) => {
 
 const Campos = (props) => {
   const { items, modal, nameId } = props
-  const { name, type, subItem, nameQuery, noEnable } = items
+  const { name, type, subItem, nameQuery, noEnable, cboItems } = items
 
   // DETERMINA SI EL ITEM A RENDERIZAR ES O NO VISIBLE
   if (noEnable != true) {
@@ -199,7 +199,8 @@ const Campos = (props) => {
           <div className='frTable-item-compuesto'>
             <label>{`${name}:`}</label>
             <div className='frTable-sub-item'>
-              <input id={`${nameId}_${nameQuery}`} className='frTable-item-compuesto-id' name={nameQuery} type='number' placeholder='0' readOnly={true} />
+              <input id={`${nameId}_${nameQuery}`} className='frTable-item-compuesto-id'
+                name={nameQuery} type='number' min={0} placeholder='0' readOnly={true} />
               <input id={`${nameId}_${nameQuery}_aux`} className='frTable-item-compuesto-txt' name={`${nameQuery}_aux`} placeholder={name} type={type} readOnly={true} />
               <button className='frTable-btn-modal' onClick={(e) => {
                 e.preventDefault()
@@ -212,11 +213,11 @@ const Campos = (props) => {
     }
     if (subItem != true) {
 
-      if (type != 'textarea' && type != 'label') return (
+      if (type != 'textarea' && type != 'label' && type != 'combox') return (
         <div>
           <div className='frTable-item-compuesto'>
             <label>{`${name}:`}</label>
-            <input id={`${nameId}_${nameQuery}`} type={type} name={nameQuery} placeholder={name} />
+            <input id={`${nameId}_${nameQuery}`} type={type} name={nameQuery} placeholder={name} min={0} />
           </div>
         </div>
       )
@@ -225,6 +226,22 @@ const Campos = (props) => {
           <div className='frTable-item-compuesto'>
             <label>{`${name}:`}</label>
             <input name={nameQuery} id={`${nameId}_${nameQuery}`} placeholder={name} readOnly={true} />
+          </div>
+        </div>
+      )
+      if (type == 'combox') return (
+        <div>
+          <div className='frTable-item-compuesto'>
+            <label>{`${name}:`}</label>
+            <select id={`${nameId}_${nameQuery}`} name={nameQuery}>
+              {cboItems.map((element, index) => {
+                return (
+                  <option key={index}>
+                    {element}
+                  </option>
+                )
+              })}
+            </select>
           </div>
         </div>
       )
@@ -250,10 +267,11 @@ const Campos = (props) => {
 const SubForm = (props) => {
   const { SUB_FORM, modal, TOKEN, stSubTable, stFormitems } = props
   const [state, setState] = useState('Agregar');
+  const [verModal, setVerModal] = useState({ estado: 'oculto', item: {} });
   // console.log(SUB_FORM)
   useEffect(() => {
     editeForm()
-  }, [stFormitems.formitems]);
+  }, [stFormitems.formitems, verModal]);
 
   // RELLENA LOS DATOS DEL FORMULARIO SEGUN SEAN SELECCIONADO SEN EL COMPONENTE SHOWTABLE
   const editeForm = () => {
@@ -262,7 +280,14 @@ const SubForm = (props) => {
         let input = document.getElementById(`${SUB_FORM.TITLE}_${SUB_FORM.CAMPOS[index].nameQuery}`)
         input.value = element
       });
-      setState("Editar")
+      if (stFormitems.formitems[0] === 'nan') {
+        setState('Agregar')
+        stFormitems.formitems[0] = ''
+        let input = document.getElementById(`${SUB_FORM.TITLE}_${SUB_FORM.CAMPOS[0].nameQuery}`)
+        input.value = ''
+      } else {
+        setState("Editar")
+      }
     } else {
       SUB_FORM.CAMPOS.forEach((element) => {
         let input = document.getElementById(`${SUB_FORM.TITLE}_${element.nameQuery}`)
@@ -277,7 +302,6 @@ const SubForm = (props) => {
     stFormitems.setFormitems([])
   }
 
-
   // EXTRAE VALORES DEL FORMULARIO DE ATENCION
   const acctionButton = (e) => {
     e.preventDefault()
@@ -291,11 +315,12 @@ const SubForm = (props) => {
   const acctionForm = async (data) => {
     const idSearch = document.getElementById('form-cotizacion_id')
     data.cotizacionId = idSearch.value
-    // console.log(data)
+
+    if (!data.priceList) data.priceList = '0'
+
     const request = state == 'Agregar' ?
       (await insertTable(SUB_FORM.URL_CRUD, data, TOKEN)) :
       (await editeTable(SUB_FORM.URL_CRUD, data, TOKEN))
-
 
     if (request.response.status < 299) {
       showRows()
@@ -314,42 +339,112 @@ const SubForm = (props) => {
 
   // CALCULA EL VALOR DEL ITEM DE LA COTIZACION
 
-  const calculateCost = (e) => {
+  const calculateCost = async (e) => {
     e.preventDefault()
     const formData = new FormData(document.getElementById('subForm-cot'))
     const dataForm = Object.fromEntries(formData.entries())
-    const quantity = parseInt(dataForm.quantity, 10)
-    const costUnd = parseInt(dataForm.price, 10)
-    const temporal = stFormitems.formitems
-    temporal[3] = quantity
-    temporal[4] = costUnd
-    temporal[7] = quantity * costUnd
 
-    // REFRESCA LOS DATOS DEL FORMULARIO
-    stFormitems.formitems.forEach((element, index) => {
-      let input = document.getElementById(`${SUB_FORM.TITLE}_${SUB_FORM.CAMPOS[index].nameQuery}`)
-      input.value = element
-    });
+
+    if (dataForm.quantity && dataForm.price) {
+
+      const quantity = parseInt(dataForm.quantity, 10)
+      let costUnd = parseInt(dataForm.price, 10)
+      let utilitis = parseFloat(dataForm.utilitis, 10)
+
+      // EN CASO DE TENER LISTA DE PRECIOS ASOCIADA
+      if (dataForm.priceList) {
+        const request = await searchTable(`${config.url}/priceList_itemsSearch`, dataForm.priceList, TOKEN)
+
+        let limit = []
+        request.data.forEach(element => {
+          limit.push(element.plItems_limit)
+        });
+        let priceList = 0
+        for (let index = 0; index < limit.length; index++) {
+          if (quantity >= limit[index]) {
+            priceList = request.data[index].plItems_price
+          }
+        }
+        costUnd = priceList
+      }
+
+
+      // EN CASO DE NO SER ASOCIADO A NINGUNA LISTA DE PRECIOS
+
+      if (!utilitis) utilitis = 0
+      const temporal = stFormitems.formitems
+      temporal[3] = quantity
+      temporal[4] = costUnd
+
+      if (utilitis) {
+        temporal[6] = utilitis
+        temporal[7] = Math.round(((quantity * costUnd) * (1 + (utilitis / 100))))
+
+      } else {
+        temporal[7] = quantity * costUnd
+        temporal[6] = utilitis
+      }
+
+      // REFRESCA LOS DATOS DEL FORMULARIO
+      stFormitems.formitems.forEach((element, index) => {
+        let input = document.getElementById(`${SUB_FORM.TITLE}_${SUB_FORM.CAMPOS[index].nameQuery}`)
+        input.value = element
+      });
+    }
+  }
+
+  // LLAMA TABLA DE COSTOS
+
+  const modalTableCost = (e) => {
+    e.preventDefault()
+
+    const formData = new FormData(document.getElementById('subForm-cot'))
+    const dataForm = Object.fromEntries(formData.entries())
+
+    const HEADERS = ['id', 'nombre', 'descripcion', 'und medida', 'precio und', 'utilidad']
+    const URL_LIST = `${config.url}/priceList`
+
+    setVerModal({
+      estado: 'visible',
+      item: {
+        URL_CRUD: URL_LIST, HEADERS: HEADERS,
+        nameForm: 'Lista de precios',
+        modalFull: true,
+        stFormitems: stFormitems,
+        SUB_FORM: SUB_FORM,
+        dataForm: Object.values(dataForm)
+      }
+    })
   }
 
   return (
-    <form id='subForm-cot'>
-      <h2 className='cot-h2'>Items de cotizacion</h2>
-      <div className='cot-form'>
-        {SUB_FORM.CAMPOS.map((element, x) => {
-          return (
-            <Campos key={x} items={element} index={x} modal={modal} nameId={SUB_FORM.TITLE} />
-          )
-        })}
-      </div>
-      <div className='cot-btn-content'>
-        <button className='cot-table-btn-acction' onClick={acctionButton}>{state}</button>
-        {state != 'Agregar' ? (
-          <button className='cot-table-btn-close' onClick={cerrar}>Cerrar</button>
-        ) : (<></>)}
-        <button className='cot-table-btn-calcular' onClick={calculateCost}>Calcular</button>
-      </div>
-    </form>
+    <>
+      <form id='subForm-cot'>
+        <h2 className='cot-h2'>Items de cotizacion</h2>
+        <div className='cot-form'>
+          {SUB_FORM.CAMPOS.map((element, x) => {
+            return (
+              <Campos key={x} items={element} index={x} modal={modal} nameId={SUB_FORM.TITLE} />
+            )
+          })}
+        </div>
+        <div className='cot-btn-content'>
+          <button className='cot-table-btn-acction' onClick={acctionButton}>{state}</button>
+          {state != 'Agregar' ? (
+            <button className='cot-table-btn-close' onClick={cerrar}>Cerrar</button>
+          ) : (<></>)}
+          <button className='cot-table-btn-calcular' onClick={calculateCost}>Calcular</button>
+          <button className='cot-table-btn-acction' onClick={modalTableCost}>Tabla de costo</button>
+        </div>
+      </form>
+      {verModal.estado != 'oculto' ? (
+        <ModalForm
+          setModalStatus={setVerModal}
+          modalStatus={verModal}
+          nameId={SUB_FORM.TITLE}
+        />
+      ) : (<></>)}
+    </>
   )
 }
 
@@ -448,10 +543,16 @@ const TotalCost = (props) => {
     });
 
     let input = document.getElementById('cot-costo_1')
+    let cboTipo = document.getElementById('cboTipo')
     const valuesForm = formActions.form.values
     valuesForm[5] = subtotal
     valuesForm[6] = input.value
-    valuesForm[7] = parseInt(subtotal) + parseInt(input.value)
+
+    if (cboTipo.value == 'neto') {
+      valuesForm[7] = parseInt(subtotal) + parseInt(input.value)
+    } else {
+      valuesForm[7] = Math.round(parseInt(subtotal) * (1 + (parseInt(input.value) / 100)))
+    }
 
     formActions.setForm({
       values: valuesForm,
@@ -496,9 +597,16 @@ const TotalCost = (props) => {
           <input id='cot-costo_0' type='number' name='subTotal' placeholder='0' />
         </div>
         <div>
-          <div className='frTable-item-compuesto'>
+          <div className='frTable-item-compuesto-cbo'>
             <label>sobre costo:</label>
-            <input id='cot-costo_1' type='number' name='costo' placeholder='0' />
+            <div>
+              <input className='frTable-item-compuesto-txt-cbo'
+                id='cot-costo_1' type='number' name='costo' placeholder='0' min={0} />
+              <select id='cboTipo'>
+                <option>neto</option>
+                <option>porcentaje</option>
+              </select>
+            </div>
           </div>
         </div>
         <div>

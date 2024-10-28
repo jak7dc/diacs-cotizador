@@ -16,7 +16,7 @@ const DATA_FORM = {
     { name: 'id', type: 'label', nameQuery: 'id' },
     { name: 'nombre', type: 'string', nameQuery: 'name' },
     { name: 'descripcion', type: 'textarea', nameQuery: 'description' },
-    { name: 'unidad de medida', type: 'string', nameQuery: 'measure' },
+    { name: 'unidad de medida', type: 'combox', nameQuery: 'measure', cboItems: ['unidad finalizada', 'tamaño', 'pliego', 'metro ^2'] },
     { name: 'costo por unidad', type: 'number', nameQuery: 'price' },
     { name: 'utilidad', type: 'number', nameQuery: 'utilitis' },
   ],

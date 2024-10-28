@@ -93,7 +93,9 @@ export const ShowTable = (props) => {
       }
 
       // COMPARAMOS SI EXISTE MATCH
-      if (isMatch) newRows.push(element)
+      if (isMatch || !dataform.value) newRows.push(element)
+
+
     });
 
     setRows(...[newRows])

@@ -59,6 +59,34 @@
 
 /* ESTILO ITEMS DEFORMULARIO */
 
+/* COMBOBOX */
+.frTable-item-compuesto select {
+  font-size: 0.9em;
+  width: 75%;
+  height: 30px;
+  border: 1px #dcdbe4 solid;
+  border-radius: 5px;
+}
+
+.frTable-item-compuesto select:focus {
+  outline: none;
+  border-bottom: 2px #5e9acd solid;
+}
+
+.frTable-item-compuesto-cbo select {
+  font-size: 0.9em;
+  width: 50%;
+  height: 30px;
+  border: 1px #dcdbe4 solid;
+  border-radius: 5px;
+}
+
+.frTable-item-compuesto-cbo select:focus {
+  outline: none;
+  border-bottom: 2px #5e9acd solid;
+}
+
+
 input {
   font-size: 0.8em;
   width: 75%;
@@ -104,12 +132,32 @@ input:focus {
   justify-content: space-between;
 }
 
+.frTable-item-compuesto-cbo {
+  display: flex;
+  margin-right: 10px;
+  /* gap: 10px; */
+  align-items: center;
+  justify-content: space-between;
+}
+
+.frTable-item-compuesto-cbo div {
+  display: flex;
+  width: 75%;
+  margin-right: 10px;
+  gap: 10px;
+  align-items: center;
+}
+
 .frTable-item-compuesto-id {
   width: 10%;
 }
 
 .frTable-item-compuesto-txt {
   width: 62%;
+}
+
+.frTable-item-compuesto-txt-cbo {
+  width: 50%;
 }
 
 .frTable-btn-modal {
@@ -124,7 +172,6 @@ input:focus {
 .frTable-btn-modal:hover {
   background-color: #2475bb;
 }
-
 
 .frTable-btn-acction {
   font-size: 0.8em;

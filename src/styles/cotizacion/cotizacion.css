@@ -154,6 +154,21 @@ table.cot-table div {
 
 
 /* ESTILO DE BOTONES */
+
+.frTable-item-compuesto select {
+  font-size: 0.9em;
+  width: 75%;
+  height: 30px;
+  border: 1px #dcdbe4 solid;
+  border-radius: 5px;
+}
+
+.frTable-item-compuesto select:focus {
+  outline: none;
+  border-bottom: 2px #5e9acd solid;
+}
+
+
 .cot-table-btn-acction {
   font-size: 0.75em;
   /* margin-top: 10px; */

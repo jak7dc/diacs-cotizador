@@ -139,7 +139,7 @@ export const FormTable = (props) => {
 
 export const Campos = (props) => {
   const { items, modal, nameId } = props
-  const { name, type, subItem, nameQuery, noEnable } = items
+  const { name, type, subItem, nameQuery, noEnable, cboItems } = items
 
   // DETERMINA SI EL ITEM A RENDERIZAR ES O NO VISIBLE
   if (noEnable != true) {
@@ -163,7 +163,7 @@ export const Campos = (props) => {
     }
     if (subItem != true) {
 
-      if (type != 'textarea' && type != 'label') return (
+      if (type != 'textarea' && type != 'label' && type != 'combox') return (
         <div>
           <div className='frTable-item-compuesto'>
             <label>{`${name}:`}</label>
@@ -179,7 +179,22 @@ export const Campos = (props) => {
           </div>
         </div>
       )
-
+      if (type == 'combox') return (
+        <div>
+          <div className='frTable-item-compuesto'>
+            <label>{`${name}:`}</label>
+            <select id={`${nameId}_${nameQuery}`} name={nameQuery}>
+              {cboItems.map((element, index) => {
+                return (
+                  <option key={index}>
+                    {element}
+                  </option>
+                )
+              })}
+            </select>
+          </div>
+        </div>
+      )
       return (
         <div>
           <div className='frTable-item-compuesto'>
